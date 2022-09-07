@@ -1,3 +1,7 @@
+Vue.component("modal", {
+    template: "#modal-template"
+  });
+
 var app = new Vue({
     el: "#app",
     data: {
@@ -5,6 +9,7 @@ var app = new Vue({
         tasks: [
 
         ],
+        showModal: false
     },
     methods: {
         remove: function(tarefa){

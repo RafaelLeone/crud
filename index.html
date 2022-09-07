@@ -4,6 +4,53 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <script src="https://unpkg.com/vue@2"></script>
+    <script type="text/x-template" id="modal-template">
+      <Transition name="modal">
+        <div class="modal-mask">
+          <div class="modal-wrapper">
+            <div class="modal-container">
+
+              <div class="modal-header">
+                <slot name="header">
+                  <div class="control" >
+                    Adicionar nova tarefa
+                  </div>
+                </slot>
+              </div>
+
+              <div class="modal-body">
+                <slot name="body">
+                  <div class="control" >
+                    <input
+                      class="input" 
+                      type="text"
+                      placeholder="Nome da tarefa"
+                      @keyup="">
+      
+                  </div>
+                </slot>
+              </div>
+
+              <div class="modal-footer">
+                <slot name="footer">
+                  <input
+                      class="input" 
+                      type="text"
+                      placeholder="Tag de categoria"
+                      @keyup="">
+                  <button class="modal-default-button espaco" @click="$emit('close')">
+                    OK
+                  </button>
+                </slot>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </script>
+
     <title>Document</title>
     <!-- Materialize CSS CDN -->
     <link
@@ -25,6 +72,9 @@
       .fle {
         display: flex;
       }
+      .espaco {
+        margin-bottom: 50%;
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 
@@ -37,8 +87,30 @@
 ​
       <div class="container">
         <div class="section">
+          <div class="add">
+            <button id="show-modal" @click="showModal = true"
+              class="btn-floating btn-large waves-effect waves-light red"
+              ><i class="fa-solid fa-plus"></i
+            ></button>
+            <!-- use the modal component, pass in the prop -->
+            <modal v-if="showModal" @close="showModal = false">
+              <!--
+            you can use custom content here to overwrite
+            default content
+          -->
+            <h3 slot="header">Adicionar nova tarefa</h3>
+            </modal>
+          </div>
           <!--   Icon Section   -->
           <div class="row">
+            <div class="control" >
+              <input
+                class="input" 
+                type="text"
+                placeholder="Pesquisar"
+                @keyup="">
+
+            </div>
             <!-- card de tarefa que repete para cada item do array -->
             <div v-for="tarefa in tasks" class="card horizontal">
               <div class="card-stacked">
@@ -54,13 +126,7 @@
             </div>
           </div>
         </div>
-        <div class="add">
-          <a
-            class="btn-floating btn-large waves-effect waves-light red"
-            href="tasksNew.html"
-            ><i class="fa-solid fa-plus"></i
-          ></a>
-        </div>
+        
       </div>
 ​
       <footer class="page-footer orange darken-3">
