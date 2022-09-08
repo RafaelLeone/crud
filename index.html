@@ -4,52 +4,6 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <script src="https://unpkg.com/vue@2"></script>
-    <script type="text/x-template" id="modal-template">
-      <Transition name="modal">
-        <div class="modal-mask">
-          <div class="modal-wrapper">
-            <div class="modal-container">
-
-              <div class="modal-header">
-                <slot name="header">
-                  <div class="control" >
-                    Adicionar nova tarefa
-                  </div>
-                </slot>
-              </div>
-
-              <div class="modal-body">
-                <slot name="body">
-                  <div class="control" >
-                    <input
-                      class="input" 
-                      type="text"
-                      placeholder="Nome da tarefa"
-                      @keyup="">
-      
-                  </div>
-                </slot>
-              </div>
-
-              <div class="modal-footer">
-                <slot name="footer">
-                  <input
-                      class="input" 
-                      type="text"
-                      placeholder="Tag de categoria"
-                      @keyup="">
-                  <button class="modal-default-button espaco" @click="$emit('close')">
-                    OK
-                  </button>
-                </slot>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Transition>
-    </script>
 
     <title>Document</title>
     <!-- Materialize CSS CDN -->
@@ -92,14 +46,62 @@
               class="btn-floating btn-large waves-effect waves-light red"
               ><i class="fa-solid fa-plus"></i
             ></button>
+            <!-- Modal de add -->
+            <div v-show="showModal" name="modal">
+              <div class="modal-mask">
+                <div class="modal-wrapper">
+                  <div class="modal-container">
+      
+                    <div class="modal-header">
+                      <slot name="header">
+                        <div class="control" >
+                          <h3>Adicionar nova tarefa</h3>
+                        </div>
+                      </slot>
+                    </div>
+      
+                    <div class="modal-body">
+                      <slot name="body">
+                        <div class="control" >
+                          <input
+                            class="input" 
+                            type="text"
+                            placeholder="Nome da tarefa"
+                            v-model="novaTarefa">
+            
+                        </div>
+                      </slot>
+                    </div>
+      
+                    <div class="modal-footer">
+                      <slot name="footer">
+                        <input
+                            class="input" 
+                            type="text"
+                            placeholder="Tag de categoria"
+                            v-model="tagDeCategoria">
+                        
+                        <div>
+                          
+                          <button class="modal-default-button espaco" @click="close(), add()">OK
+                          </button>
+                        </div>
+                      </slot>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Modal de add fim -->
+            
             <!-- use the modal component, pass in the prop -->
-            <modal v-if="showModal" @close="showModal = false">
+            <div v-if="showModal" @close="showModal = false">
               <!--
             you can use custom content here to overwrite
             default content
           -->
-            <h3 slot="header">Adicionar nova tarefa</h3>
-            </modal>
+
+        </div>
           </div>
           <!--   Icon Section   -->
           <div class="row">
@@ -119,8 +121,56 @@
                   <span :class="{risca: tarefa.feita}" class="projeto">{{ tarefa.project }}</span>
                 </div>
                 <div class="card-action fle">
-                  <a href="#">EDITAR</a>
-                  <button @click="remove(tarefa)" class="fa fa-trash"></button>
+                  <button class="fa fa-check" @click="tarefa.feita=true" v-show="!showModalEdit"></button>
+                  <button @click="showModalEdit = true" v-show="!showModalEdit">EDITAR</button>
+                  <!-- Modal de edit -->
+                  <div v-show="showModalEdit" name="modal">
+                    <div class="modal-mask">
+                      <div class="modal-wrapper">
+                        <div class="modal-container">
+            
+                          <div class="modal-header">
+                            <slot name="header">
+                              <div class="control" >
+                                <h3>Editar tarefa</h3>
+                              </div>
+                            </slot>
+                          </div>
+            
+                          <div class="modal-body">
+                            <slot name="body">
+                              <div class="control" >
+                                <input
+                                  class="input" 
+                                  type="text"
+                                  :placeholder=tarefa.title
+                                  v-model="novaTarefa">
+                              </div>
+                            </slot>
+                          </div>
+            
+                          <div class="modal-footer">
+                            <slot name="footer">
+                              <input
+                                  class="input" 
+                                  type="text"
+                                  :placeholder=tarefa.project
+                                  v-model="tagDeCategoria">
+                              
+                              <div>
+                                
+                                <button class="modal-default-button espaco" @click="close(), edit(tarefa)">OK
+                                </button>
+                              </div>
+                            </slot>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Modal de edit fim -->
+
+                  <button @click="remove(tarefa)" class="fa fa-trash" v-show="!showModalEdit"></button>
                 </div>
               </div>
             </div>
@@ -141,5 +191,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 ​
     <script src="./todo.js"></script>
+
   </body>
 </html>
